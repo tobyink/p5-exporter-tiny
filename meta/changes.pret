@@ -42,3 +42,9 @@
 		];
 	].
 
+`Exporter-Tiny 0.032 cpan:TOBYINK`
+	issued  2013-12-30;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.031_01 cpan:TOBYINK`;
+	].
+
