@@ -21,7 +21,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 2;
 
 use lib qw( examples ../examples );
 
@@ -34,5 +34,3 @@ use lib qw( examples ../examples );
 
 ok( not "Foo"->can("fib") );
 ok(     "Bar"->can("fib") );
-
-done_testing;

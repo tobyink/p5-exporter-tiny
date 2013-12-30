@@ -21,33 +21,28 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 6;
 
 use lib qw( examples ../examples );
 
-subtest "Rename functions using -as" => sub {
+diag "Rename functions using -as"; do {
 	package Local::AAA;
 	use Example::Exporter fib => { -as => 'fibonacci' };
 	::is fibonacci(6), 8, 'Correctly imported "fibonacci" from Example::Exporter';
 	::ok !__PACKAGE__->can('fib'), 'Did not inadvertantly import "fib"';
-	::done_testing;
 };
 
-subtest "Rename functions using -prefix" => sub {
+diag "Rename functions using -prefix"; do {
 	package Local::BBB;
 	use Example::Exporter fib => { -prefix => 'my' };
 	::is myfib(6), 8, 'Correctly imported "myfib" from Example::Exporter';
 	::ok !__PACKAGE__->can('fib'), 'Did not inadvertantly import "fib"';
-	::done_testing;
 };
 
-subtest "Rename functions using -suffix" => sub {
+diag "Rename functions using -suffix"; do {
 	package Local::CCC;
 	use Example::Exporter fib => { -suffix => 'onacci' };
 	::is fibonacci(6), 8, 'Correctly imported "fibonacci" from Example::Exporter';
 	::ok !__PACKAGE__->can('fib'), 'Did not inadvertantly import "fib"';
-	::done_testing;
 };
-
-done_testing;
 

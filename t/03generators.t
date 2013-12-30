@@ -21,7 +21,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 4;
 
 use lib qw( examples ../examples );
 
@@ -35,6 +35,4 @@ is embiggen_by_2(10), 12, 'embiggen_by_2';
 is embiggen_by_42(10), 52, 'embiggen_by_42';
 
 is prototype(\&embiggen), '$', 'correct prototype';
-
-done_testing;
 

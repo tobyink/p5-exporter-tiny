@@ -24,7 +24,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 2;
 
 use lib qw( examples ../examples );
 
@@ -33,6 +33,4 @@ use Example::Exporter;
 is fib(6), 8, 'Correctly imported "fib" from Example::Exporter';
 
 ok !__PACKAGE__->can('embiggen'), 'Did not inadvertantly import "embiggen"';
-
-done_testing;
 
