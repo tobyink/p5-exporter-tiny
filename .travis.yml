@@ -1,0 +1,21 @@
+language: perl
+perl:
+  - "5.19"
+  - "5.18.1_thr"
+  - "5.18"
+  - "5.16"
+  - "5.14"
+  - "5.12"
+  - "5.10"
+  - "5.8.9"
+  - "5.8.3"
+  - "5.8.1"
+  - "5.6.2"
+before_install:
+  - "source devel.travis/travis-perlbrew"
+  - "perlbrew install-cpanm -f"
+  - "perl -V"
+install:
+  - "perl -e'use Test::More (); $Test::More::VERSION >= 0.47 or system(q/cpanm Test::More/)'"
+script:
+  - "HARNESS_IS_VERBOSE=1 prove -Ilib t"
