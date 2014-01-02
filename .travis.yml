@@ -19,3 +19,8 @@ install:
   - "perl -e'use Test::More (); $Test::More::VERSION >= 0.47 or system(q/cpanm Test::More/)'"
 script:
   - "HARNESS_IS_VERBOSE=1 prove -Ilib t"
+notifications:
+  irc:
+    channels:
+      - "irc.perl.org#moops"
+    on_success: change
