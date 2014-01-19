@@ -45,3 +45,14 @@
 `Exporter-Tiny 0.032 cpan:TOBYINK`
 	issued  2013-12-30;
 	comment "No functional changes.".
+
+`Exporter-Tiny 0.033_02 cpan:TOBYINK`
+	issued  2014-01-19;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.032 cpan:TOBYINK`;
+		item [
+			a dcs:Addition;
+			label "Add a new wrapper module called Exporter::Shiny.";
+		];
+	].
+
