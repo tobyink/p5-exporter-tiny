@@ -56,3 +56,7 @@
 		];
 	].
 
+`Exporter-Tiny 0.034 cpan:TOBYINK`
+	issued  2014-01-19;
+	comment "No functional changes.".
+
