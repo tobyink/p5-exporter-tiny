@@ -469,14 +469,14 @@ which I'd built into Type::Library:
    use Types::Standard "Str" => { -as => "String" };
 
 And so I decided to factor out code that could be shared by all Type-Tiny's
-exporters into a single place: L<Exporter::TypeTiny>.
+exporters into a single place: Exporter::TypeTiny.
 
-As of version 0.026, L<Exporter::TypeTiny> was also made available as
+As of version 0.026, Exporter::TypeTiny was also made available as
 L<Exporter::Tiny>, distributed independently on CPAN. CHOCOLATEBOY had
 convinced me that it was mature enough to live a life of its own.
 
 As of version 0.030, Type-Tiny depends on Exporter::Tiny and
-L<Exporter::TypeTiny> is being phased out.
+Exporter::TypeTiny is being phased out.
 
 =head1 OBLIGATORY EXPORTER COMPARISON
 
@@ -540,7 +540,7 @@ on L<irc.perl.org|http://www.irc.perl.org/channels.html>.
 
 =head1 SEE ALSO
 
-L<Exporter::TypeTiny>,
+L<Exporter::Shiny>,
 L<Sub::Exporter>,
 L<Exporter>.
 
