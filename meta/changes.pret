@@ -78,5 +78,9 @@
 			a dcs:Documentation;
 			label "Document exactly what Exporter::Shiny is supposed to do.";
 		];
+		item [
+			a dcs:Tests;
+			label "Make t/02renaming.t less noisy.";
+		];
 	].
 
