@@ -11,6 +11,9 @@ perl:
   - "5.8.3"
   - "5.8.1"
   - "5.6.2"
+  - "5.6.1"
+  - "5.005_04"
+  - "5.004_05"
 before_install:
   - "source devel.travis/travis-perlbrew"
   - "perlbrew install-cpanm -f"

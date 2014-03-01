@@ -1,12 +1,13 @@
 package Exporter::Tiny;
 
-use 5.006001;
+use 5.004;
 use strict;
-use warnings; no warnings qw(void once uninitialized numeric redefine);
+# use warnings
 
-our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.034';
-our @EXPORT_OK = qw< mkopt mkopt_hash _croak >;
+use vars qw( $AUTHORITY $VERSION @EXPORT_OK );
+$AUTHORITY = 'cpan:TOBYINK';
+$VERSION   = '0.034';
+@EXPORT_OK = qw< mkopt mkopt_hash _croak >;
 
 sub _croak ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::croak }
 

@@ -1,13 +1,14 @@
 package Exporter::Shiny;
 
-use 5.006001;
+use 5.004;
 use strict;
-use warnings;
+#use warnings;
 
 use Exporter::Tiny ();
 
-our $AUTHORITY = 'cpan:TOBYINK';
-our $VERSION   = '0.034';
+use vars qw( $AUTHORITY $VERSION );
+$AUTHORITY = 'cpan:TOBYINK';
+$VERSION   = '0.034';
 
 sub import {
 	my $me     = shift;
