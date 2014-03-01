@@ -2,6 +2,8 @@ BREWVER=${TRAVIS_PERL_VERSION/_*/}
 BREWOPTS=
 [[ "${TRAVIS_PERL_VERSION}_" =~ '_thr_' ]] && BREWOPTS="$BREWOPTS -Duseithreads"
 
+BREWVER=`echo -n $BREWVER | perl -pe'substr($_,5,0)=q(_) if /^5\.00\d{3}/'`
+
 if ! perlbrew use | grep -q "Currently using $TRAVIS_PERL_VERSION"; then
   echo "Building perl $TRAVIS_PERL_VERSION..."
   PERLBUILD=$(perlbrew install --as $TRAVIS_PERL_VERSION --notest --noman --verbose $BREWOPTS -j 2 $BREWVER 2>&1)
