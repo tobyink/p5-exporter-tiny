@@ -23,6 +23,8 @@ use strict;
 use warnings;
 use Test::More tests => 6;
 
+BEGIN { *note = *diag unless __PACKAGE__->can("note") };
+
 use lib qw( examples ../examples );
 
 note "Rename functions using -as"; do {
