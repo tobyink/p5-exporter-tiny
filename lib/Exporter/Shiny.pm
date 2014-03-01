@@ -68,6 +68,21 @@ also supported:
 
 This is a very small wrapper to simplify using L<Exporter::Tiny>.
 
+It does the following:
+
+=over
+
+=item * Marks your package as loaded in C<< %INC >>;
+
+=item * Pushes any function names in the import list onto your C<< @EXPORT_OK >>; and
+
+=item * Pushes C<< "Exporter::Tiny" >> onto your C<< @ISA >>.
+
+=back
+
+It doesn't set up C<< %EXPORT_TAGS >> or C<< @EXPORT >>, but there's
+nothing stopping you doing that yourself.
+
 =head1 BUGS
 
 Please report any bugs to
