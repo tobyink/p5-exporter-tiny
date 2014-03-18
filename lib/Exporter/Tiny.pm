@@ -348,7 +348,10 @@ exporter module a class method called C<< _generate_foo >>.
 
 You can also generate tags:
 
-   my %constants = (FOO => 1, BAR => 2);
+   my %constants;
+   BEGIN {
+      %constants = (FOO => 1, BAR => 2);
+   }
    use constant \%constants;
    
    $EXPORT_TAGS{constants} = sub {
