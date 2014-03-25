@@ -22,16 +22,24 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 {
 	package Local::Foo;
-	use Exporter::Shiny qw(foo);
+	use Exporter::Shiny qw(foo bar);
 	sub foo {
 		return 42;
+	}
+	sub bar {
+		return 666;
 	}
 }
 
 use Local::Foo qw(foo);
 
 is(foo(), 42);
+
+my %imported;
+'Local::Foo'->import({ into => \%imported }, qw( -all !foo ));
+
+is_deeply([sort keys %imported], ['bar']);

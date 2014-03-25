@@ -17,13 +17,17 @@ sub import
 	my @args        = do { no strict qw(refs); @_ ? @_ : @{"$class\::EXPORT"} };
 	my $opts        = mkopt(\@args);
 	
-	$global_opts->{into} = caller unless exists $global_opts->{into};
 	my @want;
+	my %not_want;
+	$global_opts->{into} = caller unless exists $global_opts->{into};
+	$global_opts->{not}  = \%not_want;
 	
 	while (@$opts)
 	{
 		my $opt = shift @{$opts};
 		my ($name, $value) = @$opt;
+		
+		($name =~ /^\!(.+)/) and ++$not_want{$1} and next;
 		
 		$name =~ /^[:-](.+)$/
 			? push(@$opts, $class->_exporter_expand_tag($1, $value, $global_opts))
@@ -35,6 +39,8 @@ sub import
 	
 	for my $wanted (@want)
 	{
+		next if $not_want{$wanted->[0]};
+		
 		my %symbols = $class->_exporter_expand_sub(@$wanted, $global_opts, $permitted);
 		$class->_exporter_install_sub($_, $wanted->[1], $global_opts, $symbols{$_})
 			for keys %symbols;
@@ -318,6 +324,17 @@ OK, Sub::Exporter doesn't do this...
    use MyUtils { into => \%funcs }, "frobnicate";
    
    $funcs{frobnicate}->(...);
+
+=head2 DO NOT WANT!
+
+This imports everything except "frobnicate":
+
+   use MyUtils qw( -all !frobnicate );
+
+Negated imports always "win", so the following will not import
+"frobnicate", no matter how many times you repeat it...
+
+   use MyUtils qw( !frobnicate frobnicate frobnicate frobnicate );
 
 =head1 TIPS AND TRICKS EXPORTING USING EXPORTER::TINY
 
