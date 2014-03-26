@@ -228,6 +228,8 @@ __END__
 
 =encoding utf-8
 
+=for stopwords frobnicate greps regexps
+
 =head1 NAME
 
 Exporter::Tiny - an exporter with the features of Sub::Exporter but only core dependencies
