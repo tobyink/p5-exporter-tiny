@@ -87,3 +87,13 @@
 `Exporter-Tiny 0.036 cpan:TOBYINK`
 	issued  2014-03-11;
 	comment "No functional changes since 0.035_02.".
+
+`Exporter-Tiny 0.037_01 cpan:TOBYINK`
+	issued  2014-03-26;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.036 cpan:TOBYINK`;
+		item "Fix minor error in documentation of generators."^^Documentation;
+		item "Support Exporter.pm's import negation syntax qw( !foo )."^^Addition;
+		item "Support Exporter.pm's regexp import syntax qw( /foo/ )."^^Addition;
+	].
+
