@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Very basic Exporter::Shiny test.
+Test the C<< !notwant >> notation.
 
 =head1 AUTHOR
 
@@ -35,6 +35,7 @@ use Test::More tests => 1;
 	}
 }
 
-use Local::Foo qw(foo);
+my %imported;
+'Local::Foo'->import({ into => \%imported }, qw( -all !foo ));
 
-is(foo(), 42);
+is_deeply([sort keys %imported], ['bar']);

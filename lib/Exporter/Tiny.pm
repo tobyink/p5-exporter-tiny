@@ -27,11 +27,19 @@ sub import
 		my $opt = shift @{$opts};
 		my ($name, $value) = @$opt;
 		
-		($name =~ /^\!(.+)/) and ++$not_want{$1} and next;
-		
-		$name =~ /^[:-](.+)$/
-			? push(@$opts, $class->_exporter_expand_tag($1, $value, $global_opts))
-			: push(@want, $opt);
+		($name =~ m{\A\!(/.+/[msixpodual]+)\z}) ?
+			do {
+				my @not = $class->_exporter_expand_regexp($1, $value, $global_opts);
+				++$not_want{$_->[0]} for @not;
+			} :
+		($name =~ m{\A\!(.+)\z}) ?
+			(++$not_want{$1}) :
+		($name =~ m{\A[:-](.+)\z}) ?
+			push(@$opts, $class->_exporter_expand_tag($1, $value, $global_opts)) :
+		($name =~ m{\A/.+/[msixpodual]+\z}) ?
+			push(@$opts, $class->_exporter_expand_regexp($name, $value, $global_opts)) :
+		# else ?
+			push(@want, $opt);
 	}
 	
 	$class->_exporter_validate_opts($global_opts);
@@ -83,6 +91,20 @@ sub _exporter_expand_tag
 	
 	$globals->{$name} = $value || 1;
 	return;
+}
+
+# Given a regexp-like string, looks it up in @EXPORT_OK and returns the
+# list of matching functions.
+# 
+sub _exporter_expand_regexp
+{
+	no strict qw(refs);
+	
+	my $class = shift;
+	my ($name, $value, $globals) = @_;
+	my $compiled = eval("qr$name");
+	
+	map [$_ => $value], grep /$compiled/, @{"$class\::EXPORT_OK"};
 }
 
 # Helper for _exporter_expand_sub. Returns a regexp matching all subs in
@@ -336,6 +358,19 @@ Negated imports always "win", so the following will not import
 
    use MyUtils qw( !frobnicate frobnicate frobnicate frobnicate );
 
+=head2 Importing by regexp
+
+Here's how you could import all functions beginning with an "f":
+
+   use MyUtils qw( /^F/i );
+
+Or import everything except functions beginning with a "z":
+
+   use MyUtils qw( -all !/^Z/i );
+
+Note that regexps are always supplied as I<strings> starting with
+C<< "/" >>, and not as quoted regexp references (C<< qr/.../ >>).
+
 =head1 TIPS AND TRICKS EXPORTING USING EXPORTER::TINY
 
 Simple configuration works the same as L<Exporter>; inherit from this module,
@@ -416,6 +451,13 @@ expansion loop!
 
 The default implementation uses C<< %EXPORT_TAGS >> to expand tags, and
 provides fallbacks for the C<< :default >> and C<< :all >> tags.
+
+=item C<< _exporter_expand_regexp($regexp, $args, $globals) >>
+
+Like C<_exporter_expand_regexp>, but given a regexp-like string instead
+of a tag name.
+
+The default implementation greps through C<< @EXPORT_OK >>.
 
 =item C<< _exporter_expand_sub($name, $args, $globals) >>
 

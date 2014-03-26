@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Very basic Exporter::Shiny test.
+Test the C<< /regexp/ >> notation.
 
 =head1 AUTHOR
 
@@ -22,7 +22,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 {
 	package Local::Foo;
@@ -35,6 +35,14 @@ use Test::More tests => 1;
 	}
 }
 
-use Local::Foo qw(foo);
+{
+	my %imported;
+	'Local::Foo'->import({ into => \%imported }, qw( /^F/i ));
+	is_deeply([sort keys %imported], ['foo']);
+}
 
-is(foo(), 42);
+{
+	my %imported;
+	'Local::Foo'->import({ into => \%imported }, qw( -all !/^F/i ));
+	is_deeply([sort keys %imported], ['bar']);
+}
