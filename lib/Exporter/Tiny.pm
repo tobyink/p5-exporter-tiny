@@ -64,6 +64,29 @@ sub _exporter_validate_opts
 	1;
 }
 
+# Called after expanding a tag or regexp to merge the tag's options with
+# any sub-specific options.
+sub _exporter_merge_opts
+{
+	my $class = shift;
+	my ($tag_opts, $global_opts, @stuff) = @_;
+	
+	_croak('Cannot provide an -as option for tags')
+		if exists $tag_opts->{-as};
+	
+	my $optlist = mkopt(\@stuff);
+	for my $export (@$optlist)
+	{
+		my %sub_opts = ( %{ $export->[1] or {} }, %$tag_opts );
+		$sub_opts{-prefix} = sprintf('%s%s', $tag_opts->{-prefix}, $export->[1]{-prefix})
+			if exists($export->[1]{-prefix}) && exists($tag_opts->{-prefix});
+		$sub_opts{-suffix} = sprintf('%s%s', $export->[1]{-suffix}, $tag_opts->{-suffix})
+			if exists($export->[1]{-suffix}) && exists($tag_opts->{-suffix});
+		$export->[1] = \%sub_opts;
+	}
+	return @$optlist;
+}
+
 # Given a tag name, looks it up in %EXPORT_TAGS and returns the list of
 # associated functions. The default implementation magically handles tags
 # "all" and "default". The default implementation interprets any undefined
@@ -77,16 +100,16 @@ sub _exporter_expand_tag
 	my ($name, $value, $globals) = @_;
 	my $tags  = \%{"$class\::EXPORT_TAGS"};
 	
-	return map [$_ => $value], $tags->{$name}->($class, @_)
+	return $class->_exporter_merge_opts($value, $globals, $tags->{$name}->($class, @_))
 		if ref($tags->{$name}) eq q(CODE);
 	
-	return map [$_ => $value], @{$tags->{$name}}
+	return $class->_exporter_merge_opts($value, $globals, @{$tags->{$name}})
 		if exists $tags->{$name};
 	
-	return map [$_ => $value], @{"$class\::EXPORT"}, @{"$class\::EXPORT_OK"}
+	return $class->_exporter_merge_opts($value, $globals, @{"$class\::EXPORT"}, @{"$class\::EXPORT_OK"})
 		if $name eq 'all';
 	
-	return map [$_ => $value], @{"$class\::EXPORT"}
+	return $class->_exporter_merge_opts($value, $globals, @{"$class\::EXPORT"})
 		if $name eq 'default';
 	
 	$globals->{$name} = $value || 1;
@@ -104,7 +127,7 @@ sub _exporter_expand_regexp
 	my ($name, $value, $globals) = @_;
 	my $compiled = eval("qr$name");
 	
-	map [$_ => $value], grep /$compiled/, @{"$class\::EXPORT_OK"};
+	$class->_exporter_merge_opts($value, $globals, grep /$compiled/, @{"$class\::EXPORT_OK"});
 }
 
 # Helper for _exporter_expand_sub. Returns a regexp matching all subs in
@@ -438,6 +461,11 @@ You may use this method to munge the global options, or validate them,
 throwing an exception or printing a warning.
 
 The default implementation does nothing interesting.
+
+item C<< _exporter_merge_opts($tag_opts, $globals, @exports) >>
+
+Called to merge options which have been provided for a tag into the
+options provided for the exports that the tag expanded to.
 
 =item C<< _exporter_expand_tag($name, $args, $globals) >>
 
