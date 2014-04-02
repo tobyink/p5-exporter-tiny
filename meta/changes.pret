@@ -97,3 +97,10 @@
 		item "Support Exporter.pm's regexp import syntax qw( /foo/ )."^^Addition;
 	].
 
+`Exporter-Tiny 0.037_02 cpan:TOBYINK`
+	issued  2014-04-02;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.037_01 cpan:TOBYINK`;
+		item "Improved handling of hashrefs of options passed to tags, and hashrefs of options found within %EXPORT_TAGS arrayrefs."^^Change;
+	].
+
