@@ -71,12 +71,15 @@ sub _exporter_merge_opts
 	my $class = shift;
 	my ($tag_opts, $global_opts, @stuff) = @_;
 	
+	$tag_opts = {} unless ref($tag_opts) eq q(HASH);
 	_croak('Cannot provide an -as option for tags')
 		if exists $tag_opts->{-as};
 	
 	my $optlist = mkopt(\@stuff);
 	for my $export (@$optlist)
 	{
+		next if defined($export->[1]) && ref($export->[1]) ne q(HASH);
+		
 		my %sub_opts = ( %{ $export->[1] or {} }, %$tag_opts );
 		$sub_opts{-prefix} = sprintf('%s%s', $tag_opts->{-prefix}, $export->[1]{-prefix})
 			if exists($export->[1]{-prefix}) && exists($tag_opts->{-prefix});
