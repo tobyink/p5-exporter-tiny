@@ -462,7 +462,7 @@ throwing an exception or printing a warning.
 
 The default implementation does nothing interesting.
 
-item C<< _exporter_merge_opts($tag_opts, $globals, @exports) >>
+=item C<< _exporter_merge_opts($tag_opts, $globals, @exports) >>
 
 Called to merge options which have been provided for a tag into the
 options provided for the exports that the tag expanded to.
