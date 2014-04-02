@@ -104,3 +104,10 @@
 		item "Improved handling of hashrefs of options passed to tags, and hashrefs of options found within %EXPORT_TAGS arrayrefs."^^Change;
 	].
 
+`Exporter-Tiny 0.037_03 cpan:TOBYINK`
+	issued  2014-04-02;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.037_02 cpan:TOBYINK`;
+		item "Only attempt to merge hashes if we're sure they're both really hashes!"^^Bugfix;
+	].
+
