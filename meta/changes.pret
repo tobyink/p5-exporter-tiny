@@ -111,3 +111,7 @@
 		item "Only attempt to merge hashes if we're sure they're both really hashes!"^^Bugfix;
 	].
 
+`Exporter-Tiny 0.038 cpan:TOBYINK`
+	issued  2014-04-04;
+	comment "No functional changes since 0.037_03.".
+
