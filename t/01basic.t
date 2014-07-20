@@ -30,6 +30,8 @@ use lib qw( examples ../examples );
 
 use Example::Exporter;
 
+diag("Perl $]");
+
 is fib(6), 8, 'Correctly imported "fib" from Example::Exporter';
 
 ok !__PACKAGE__->can('embiggen'), 'Did not inadvertantly import "embiggen"';

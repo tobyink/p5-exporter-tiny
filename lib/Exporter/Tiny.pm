@@ -6,9 +6,10 @@ use warnings; no warnings qw(void once uninitialized numeric redefine);
 
 our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '0.038';
-our @EXPORT_OK = qw< mkopt mkopt_hash _croak >;
+our @EXPORT_OK = qw< mkopt mkopt_hash _croak _carp >;
 
 sub _croak ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::croak }
+sub _carp  ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::carp }
 
 sub import
 {
@@ -176,7 +177,7 @@ sub _exporter_fail
 {
 	my $class = shift;
 	my ($name, $value, $globals) = @_;
-	_croak("Could not find sub '$name' to export in package '$class'");
+	_croak("Could not find sub '%s' exported by %s", $name, $class);
 }
 
 # Actually performs the installation of the sub into the target package. This
@@ -202,16 +203,34 @@ sub _exporter_install_sub
 	return ($$name = $sym)                       if ref($name) eq q(SCALAR);
 	return ($into->{$name} = $sym)               if ref($into) eq q(HASH);
 	
-	require B;
-	for (grep ref, $into->can($name))
+	no strict qw(refs);
+	
+	if (exists &{"$into\::$name"} and \&{"$into\::$name"} != $sym)
 	{
-		my $stash = B::svref_2object($_)->STASH;
-		next unless $stash->can("NAME");
-		$stash->NAME eq $into
-			and _croak("Refusing to overwrite local sub '$name' with export from $class");
+		my ($level) = grep defined, $value->{-replace}, $globals->{replace}, q(0);
+		my $action = {
+			carp     => \&_carp,
+			0        => \&_carp,
+			''       => \&_carp,
+			warn     => \&_carp,
+			nonfatal => \&_carp,
+			croak    => \&_croak,
+			fatal    => \&_croak,
+			die      => \&_croak,
+		}->{$level} || sub {};
+		
+		$action->(
+			$action == \&_croak
+				? "Refusing to overwrite existing sub '%s::%s' with sub '%s' exported by %s"
+				: "Overwriting existing sub '%s::%s' with sub '%s' exported by %s",
+			$into,
+			$name,
+			$_[0],
+			$class,
+		);
 	}
 	
-	no strict qw(refs);
+	no warnings qw(prototype);
 	*{"$into\::$name"} = $sym;
 }
 
@@ -334,8 +353,14 @@ Sub::Exporter, but where it does it usually uses a fairly similar API.
    # call it "my_frobnicate"
    use MyUtils "frobnicate" => { -prefix => "my_" };
 
+   # can set a prefix for *all* functions imported from MyUtils
+   # by placing the options hashref *first*.
+   use MyUtils { prefix => "my_" }, "frobnicate";
+   # (note the lack of hyphen before `prefix`.)
+
    # call it "frobnicate_util"
    use MyUtils "frobnicate" => { -suffix => "_util" };
+   use MyUtils { suffix => "_util" }, "frobnicate";
 
    # import it twice with two different names
    use MyUtils
@@ -544,6 +569,39 @@ C<< -prefix >> and C<< -suffix >> functions. This method does a lot of
 stuff; if you need to override it, it's probably a good idea to just
 pre-process the arguments and then call the super method rather than
 trying to handle all of it yourself.
+
+=back
+
+=head1 DIAGNOSTICS
+
+=over
+
+=item B<< Overwriting existing sub '%s::%s' with sub '%s' exported by %s >>
+
+A warning issued if Exporter::Tiny is asked to export a symbol which
+will result in an existing sub being overwritten. This warning can be
+suppressed using either of the following:
+
+   use MyUtils { replace => 1 }, "frobnicate";
+   use MyUtils "frobnicate" => { -replace => 1 };
+
+Or can be upgraded to a fatal error:
+
+   use MyUtils { replace => "die" }, "frobnicate";
+   use MyUtils "frobnicate" => { -replace => "die" };
+
+=item B<< Refusing to overwrite existing sub '%s::%s' with sub '%s' exported by %s >>
+
+The fatal version of the above warning.
+
+=item B<< Could not find sub '%s' exported by %s >>
+
+You requested to import a sub which the package does not provide.
+
+=item B<< Cannot provide an -as option for tags >>
+
+Because a tag may provide more than one function, it does not make sense
+to request a single name for it. Instead use C<< -prefix >> or C<< -suffix >>.
 
 =back
 
