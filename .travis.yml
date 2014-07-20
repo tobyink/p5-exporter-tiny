@@ -31,7 +31,7 @@ install:
 before_script:
   - coverage-setup
 script:
-  - prove -l "t"
+  - prove -l -v "t"
 after_success:
   - coverage-report
 notifications:
