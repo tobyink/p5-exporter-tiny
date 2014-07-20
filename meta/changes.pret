@@ -115,3 +115,12 @@
 	issued  2014-04-04;
 	comment "No functional changes since 0.037_03.".
 
+`Exporter-Tiny 0.039_01 cpan:TOBYINK`
+	issued  2014-07-20;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.038 cpan:TOBYINK`;
+		item "Document warning and error messages produced by Exporter::Tiny."^^Documentation;
+		item "No longer die when redefining locally defined subs."^^Change;
+		item "Warn when redefining any subs."^^Change;
+		item "Exporter::Tiny would previously cause B.pm to be loaded into memory any time it exported anything. It no longer does."^^Change;
+	].
