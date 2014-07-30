@@ -5,5 +5,7 @@
 `Exporter-Tiny`
 	:test-requirement       [ :on "Test::More 0.47"^^:CpanId ];
 	:runtime-requirement    [ :on "perl 5.006001"^^:CpanId ];
+	:test-recommendation    [ :on "Test::Fatal"^^:CpanId ];
+	:test-recommendation    [ :on "Test::Warnings"^^:CpanId ];
 	.
 
