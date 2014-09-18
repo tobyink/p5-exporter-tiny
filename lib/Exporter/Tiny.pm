@@ -42,7 +42,6 @@ sub import
 	my $class = shift;
 	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
 	$global_opts->{into} = caller unless exists $global_opts->{into};
-	$class->_exporter_validate_opts($global_opts);
 	
 	my @want;
 	my %not_want; $global_opts->{not} = \%not_want;
@@ -51,6 +50,7 @@ sub import
 	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
 	
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
+	$class->_exporter_validate_opts($global_opts);
 	
 	for my $wanted (@want)
 	{
@@ -68,7 +68,6 @@ sub unimport
 	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
 	$global_opts->{into} = caller unless exists $global_opts->{into};
 	$global_opts->{is_unimport} = 1;
-	$class->_exporter_validate_unimport_opts($global_opts);
 	
 	my @want;
 	my %not_want; $global_opts->{not} = \%not_want;
@@ -77,6 +76,7 @@ sub unimport
 	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
 	
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
+	$class->_exporter_validate_unimport_opts($global_opts);
 	
 	my $expando = $class->can('_exporter_expand_sub');
 	$expando = undef if $expando == \&_exporter_expand_sub;
