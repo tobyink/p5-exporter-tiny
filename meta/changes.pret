@@ -139,3 +139,10 @@
 		item "Add an `unimport` feature."^^Change;
 	].
 
+`Exporter-Tiny 0.041_02 cpan:TOBYINK`
+	issued  2014-09-19;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.041_01 cpan:TOBYINK`;
+		item "Option validation needs to happen after expanding tags."^^Bugfix;
+	].
+
