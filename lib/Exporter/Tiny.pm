@@ -34,7 +34,7 @@ my $_process_optlist = sub
 			push(@$opts, $class->_exporter_expand_regexp($name, $value, $global_opts)) :
 		# else ?
 			push(@$want, $opt);
-	}	
+	}
 };
 
 sub import
@@ -65,7 +65,7 @@ sub import
 sub unimport
 {
 	my $class = shift;
-	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };	
+	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
 	$global_opts->{into} = caller unless exists $global_opts->{into};
 	$global_opts->{is_unimport} = 1;
 	$class->_exporter_validate_unimport_opts($global_opts);
