@@ -199,7 +199,6 @@ sub _exporter_install_sub
 		$name = "$prefix$name$suffix";
 	}
 	
-	return $installer->($globals, [$name, $sym]) if $installer;
 	return ($$name = $sym)                       if ref($name) eq q(SCALAR);
 	return ($into->{$name} = $sym)               if ref($into) eq q(HASH);
 	
@@ -231,7 +230,9 @@ sub _exporter_install_sub
 	}
 	
 	no warnings qw(prototype);
-	*{"$into\::$name"} = $sym;
+	$installer
+		? $installer->($globals, [$name, $sym])
+		: (*{"$into\::$name"} = $sym);
 }
 
 sub mkopt
