@@ -11,17 +11,10 @@ our @EXPORT_OK = qw< mkopt mkopt_hash _croak _carp >;
 sub _croak ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::croak }
 sub _carp  ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::carp }
 
-sub import
+my $_process_optlist = sub
 {
-	my $class       = shift;
-	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
-	my @args        = do { no strict qw(refs); @_ ? @_ : @{"$class\::EXPORT"} };
-	my $opts        = mkopt(\@args);
-	
-	my @want;
-	my %not_want;
-	$global_opts->{into} = caller unless exists $global_opts->{into};
-	$global_opts->{not}  = \%not_want;
+	my $class = shift;
+	my ($global_opts, $opts, $want, $not_want) = @_;
 	
 	while (@$opts)
 	{
@@ -31,19 +24,32 @@ sub import
 		($name =~ m{\A\!(/.+/[msixpodual]+)\z}) ?
 			do {
 				my @not = $class->_exporter_expand_regexp($1, $value, $global_opts);
-				++$not_want{$_->[0]} for @not;
+				++$not_want->{$_->[0]} for @not;
 			} :
 		($name =~ m{\A\!(.+)\z}) ?
-			(++$not_want{$1}) :
+			(++$not_want->{$1}) :
 		($name =~ m{\A[:-](.+)\z}) ?
 			push(@$opts, $class->_exporter_expand_tag($1, $value, $global_opts)) :
 		($name =~ m{\A/.+/[msixpodual]+\z}) ?
 			push(@$opts, $class->_exporter_expand_regexp($name, $value, $global_opts)) :
 		# else ?
-			push(@want, $opt);
-	}
-	
+			push(@$want, $opt);
+	}	
+};
+
+sub import
+{
+	my $class = shift;
+	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
+	$global_opts->{into} = caller unless exists $global_opts->{into};
 	$class->_exporter_validate_opts($global_opts);
+	
+	my @want;
+	my %not_want; $global_opts->{not} = \%not_want;
+	my @args = do { no strict qw(refs); @_ ? @_ : @{"$class\::EXPORT"} };
+	my $opts = mkopt(\@args);
+	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
+	
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
 	
 	for my $wanted (@want)
@@ -56,17 +62,53 @@ sub import
 	}
 }
 
-# Called once per import, passed the "global" import options. Expected to
-# validate the import options and carp or croak if there are problems. Can
-# also take the opportunity to do other stuff if needed.
-#
-sub _exporter_validate_opts
+sub unimport
 {
-	1;
+	my $class = shift;
+	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };	
+	$global_opts->{into} = caller unless exists $global_opts->{into};
+	$global_opts->{is_unimport} = 1;
+	$class->_exporter_validate_unimport_opts($global_opts);
+	
+	my @want;
+	my %not_want; $global_opts->{not} = \%not_want;
+	my @args = do { our %TRACKED; @_ ? @_ : keys(%{$TRACKED{$class}{$global_opts->{into}}}) };
+	my $opts = mkopt(\@args);
+	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
+	
+	my $permitted = $class->_exporter_permitted_regexp($global_opts);
+	
+	my $expando = $class->can('_exporter_expand_sub');
+	$expando = undef if $expando == \&_exporter_expand_sub;
+	
+	for my $wanted (@want)
+	{
+		next if $not_want{$wanted->[0]};
+		
+		if ($wanted->[1])
+		{
+			_carp("Passing options to unimport '$wanted->[0]' makes no sense")
+				unless (ref($wanted->[1]) eq 'HASH' and not keys %{$wanted->[1]});
+		}
+		
+		my %symbols = defined($expando)
+			? $class->$expando(@$wanted, $global_opts, $permitted)
+			: ($wanted->[0] => sub { "dummy" });
+		$class->_exporter_uninstall_sub($_, $wanted->[1], $global_opts)
+			for keys %symbols;
+	}
 }
+
+# Called once per import/unimport, passed the "global" import options.
+# Expected to validate the options and carp or croak if there are problems.
+# Can also take the opportunity to do other stuff if needed.
+#
+sub _exporter_validate_opts          { 1 }
+sub _exporter_validate_unimport_opts { 1 }
 
 # Called after expanding a tag or regexp to merge the tag's options with
 # any sub-specific options.
+#
 sub _exporter_merge_opts
 {
 	my $class = shift;
@@ -126,12 +168,17 @@ sub _exporter_expand_tag
 sub _exporter_expand_regexp
 {
 	no strict qw(refs);
+	our %TRACKED;
 	
 	my $class = shift;
 	my ($name, $value, $globals) = @_;
 	my $compiled = eval("qr$name");
 	
-	$class->_exporter_merge_opts($value, $globals, grep /$compiled/, @{"$class\::EXPORT_OK"});
+	my @possible = $globals->{is_unimport}
+		? keys( %{$TRACKED{$class}{$globals->{into}}} )
+		: @{"$class\::EXPORT_OK"};
+	
+	$class->_exporter_merge_opts($value, $globals, grep /$compiled/, @possible);
 }
 
 # Helper for _exporter_expand_sub. Returns a regexp matching all subs in
@@ -177,6 +224,7 @@ sub _exporter_fail
 {
 	my $class = shift;
 	my ($name, $value, $globals) = @_;
+	return if $globals->{is_unimport};
 	_croak("Could not find sub '%s' exported by %s", $name, $class);
 }
 
@@ -229,10 +277,39 @@ sub _exporter_install_sub
 		);
 	}
 	
+	our %TRACKED;
+	$TRACKED{$class}{$into}{$name} = $sym;
+	
 	no warnings qw(prototype);
 	$installer
 		? $installer->($globals, [$name, $sym])
 		: (*{"$into\::$name"} = $sym);
+}
+
+sub _exporter_uninstall_sub
+{
+	our %TRACKED;
+	my $class = shift;
+	my ($name, $value, $globals, $sym) = @_;
+	my $into = $globals->{into};
+	ref $into and return;
+	
+	no strict qw(refs);
+	
+	# Cowardly refuse to uninstall a sub that differs from the one
+	# we installed!
+	my $our_coderef = $TRACKED{$class}{$into}{$name};
+	my $cur_coderef = exists(&{"$into\::$name"}) ? \&{"$into\::$name"} : -1;
+	return unless $our_coderef == $cur_coderef;
+	
+	my $stash     = \%{"$into\::"};
+	my $old       = delete $stash->{$name};
+	my $full_name = join('::', $into, $name);
+	foreach my $type (qw(SCALAR HASH ARRAY IO)) # everything but the CODE
+	{
+		next unless defined(*{$old}{$type});
+		*$full_name = *{$old}{$type};
+	}
 }
 
 sub mkopt
@@ -425,6 +502,25 @@ Or import everything except functions beginning with a "z":
 Note that regexps are always supplied as I<strings> starting with
 C<< "/" >>, and not as quoted regexp references (C<< qr/.../ >>).
 
+=head2 Unimporting
+
+You can unimport the functions that MyUtils added to your namespace:
+
+   no MyUtils;
+
+Or just specific ones:
+
+   no MyUtils qw(frobnicate);
+
+If you renamed a function when you imported it, you should unimport by
+the new name:
+
+   use MyUtils frobnicate => { -as => "frob" };
+   ...;
+   no MyUtils "frob";
+
+Unimporting using tags and regexps should mostly do what you want.
+
 =head1 TIPS AND TRICKS EXPORTING USING EXPORTER::TINY
 
 Simple configuration works the same as L<Exporter>; inherit from this module,
@@ -491,6 +587,10 @@ throwing an exception or printing a warning.
 
 The default implementation does nothing interesting.
 
+=item C<< _exporter_validate_unimport_opts($globals) >>
+
+Like C<_exporter_validate_opts>, but called for C<unimport>.
+
 =item C<< _exporter_merge_opts($tag_opts, $globals, @exports) >>
 
 Called to merge options which have been provided for a tag into the
@@ -516,7 +616,8 @@ provides fallbacks for the C<< :default >> and C<< :all >> tags.
 Like C<_exporter_expand_regexp>, but given a regexp-like string instead
 of a tag name.
 
-The default implementation greps through C<< @EXPORT_OK >>.
+The default implementation greps through C<< @EXPORT_OK >> for imports,
+and the list of already-imported functions for exports.
 
 =item C<< _exporter_expand_sub($name, $args, $globals) >>
 
@@ -570,6 +671,10 @@ C<< -prefix >> and C<< -suffix >> functions. This method does a lot of
 stuff; if you need to override it, it's probably a good idea to just
 pre-process the arguments and then call the super method rather than
 trying to handle all of it yourself.
+
+=item C<< _exporter_uninstall_sub($name, $args, $globals) >>
+
+The opposite of C<_exporter_install_sub>.
 
 =back
 
