@@ -776,13 +776,16 @@ B<< Features: >>
  Can export code symbols............. Yes     Yes     Yes     Yes      
  Can export non-code symbols......... Yes                              
  Groups/tags......................... Yes     Yes     Yes     Yes      
- Config avoids package variables.....                 Yes              
+ Export by regexp.................... Yes     Yes                      
+ Bang prefix......................... Yes     Yes                      
  Allows renaming of subs.............         Yes     Yes     Maybe    
  Install code into scalar refs.......         Yes     Yes     Maybe    
  Can be passed an "into" parameter...         Yes     Yes     Maybe    
  Can be passed an "installer" sub....         Yes     Yes     Maybe    
+ Config avoids package variables.....                 Yes              
  Supports generators.................         Yes     Yes              
  Sane API for generators.............         Yes     Yes              
+ Unimport............................         Yes                      
 
 (Certain Sub::Exporter::Progressive features are only available if
 Sub::Exporter is installed.)
