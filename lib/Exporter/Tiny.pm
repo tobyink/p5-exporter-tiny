@@ -87,7 +87,7 @@ sub unimport
 		
 		if ($wanted->[1])
 		{
-			_carp("Passing options to unimport '$wanted->[0]' makes no sense")
+			_carp("Passing options to unimport '%s' makes no sense", $wanted->[0])
 				unless (ref($wanted->[1]) eq 'HASH' and not keys %{$wanted->[1]});
 		}
 		
@@ -310,6 +310,8 @@ sub _exporter_uninstall_sub
 		next unless defined(*{$old}{$type});
 		*$full_name = *{$old}{$type};
 	}
+	
+	delete $TRACKED{$class}{$into}{$name};
 }
 
 sub mkopt
@@ -708,6 +710,12 @@ You requested to import a sub which the package does not provide.
 
 Because a tag may provide more than one function, it does not make sense
 to request a single name for it. Instead use C<< -prefix >> or C<< -suffix >>.
+
+=item B<< Passing options to unimport '%s' makes no sense >>
+
+When you import a sub, it occasionally makes sense to pass some options
+for it. However, when unimporting, options do nothing, so this warning
+is issued.
 
 =back
 
