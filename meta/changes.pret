@@ -146,3 +146,11 @@
 		item "Option validation needs to happen after expanding tags."^^Bugfix;
 	].
 
+`Exporter-Tiny 0.042 cpan:TOBYINK`
+	issued  2014-10-04;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.041_02 cpan:TOBYINK`;
+		item "Document the warning emitted when you provide options to a function you are unimporting."^^Documentation;
+		item "Housekeeping on %TRACKED."^^Change;
+	].
+
