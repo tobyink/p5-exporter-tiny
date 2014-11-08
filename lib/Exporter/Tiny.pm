@@ -116,7 +116,7 @@ sub _exporter_merge_opts
 	
 	$tag_opts = {} unless ref($tag_opts) eq q(HASH);
 	_croak('Cannot provide an -as option for tags')
-		if exists $tag_opts->{-as};
+		if exists $tag_opts->{-as} && ref $tag_opts->{-as} ne 'CODE';
 	
 	my $optlist = mkopt(\@stuff);
 	for my $export (@$optlist)
@@ -239,16 +239,23 @@ sub _exporter_install_sub
 	my $into      = $globals->{into};
 	my $installer = $globals->{installer} || $globals->{exporter};
 	
-	$name = $value->{-as} || $name;
-	unless (ref($name) eq q(SCALAR))
+	$name =
+		ref    $globals->{as} ? $globals->{as}->($name) :
+		ref    $value->{-as}  ? $value->{-as}->($name) :
+		exists $value->{-as}  ? $value->{-as} :
+		$name;
+	
+	return unless defined $name;
+	
+	unless (ref($name))
 	{
 		my ($prefix) = grep defined, $value->{-prefix}, $globals->{prefix}, q();
 		my ($suffix) = grep defined, $value->{-suffix}, $globals->{suffix}, q();
 		$name = "$prefix$name$suffix";
 	}
 	
-	return ($$name = $sym)                       if ref($name) eq q(SCALAR);
-	return ($into->{$name} = $sym)               if ref($into) eq q(HASH);
+	return ($$name = $sym)         if ref($name) eq q(SCALAR);
+	return ($into->{$name} = $sym) if ref($into) eq q(HASH);
 	
 	no strict qw(refs);
 	
