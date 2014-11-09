@@ -154,3 +154,11 @@
 		item "Housekeeping on %TRACKED."^^Change;
 	].
 
+`Exporter-Tiny 0.043_01 cpan:TOBYINK`
+	issued  2014-11-09;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.042 cpan:TOBYINK`;
+		item "Restructure documentation."^^Documentation;
+		item "Support { -as => CODE } to programatically rename functions."^^Change;
+	].
+
