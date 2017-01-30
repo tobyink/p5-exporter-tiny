@@ -169,3 +169,10 @@
 		item "Release using newer versions of toolchain stuff."^^Packaging;
 	].
 
+`Exporter-Tiny 0.044 cpan:TOBYINK`
+	issued  2017-01-30;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.043_02 cpan:TOBYINK`;
+		item "Repackage as a stable release."^^Packaging;
+	].
+
