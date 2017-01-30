@@ -1,6 +1,5 @@
 language: perl
 perl:
-  - "5.6.1"
   - "5.6.2"
   - "5.8.1"
   - "5.8.9-thr"
@@ -28,7 +27,6 @@ before_install:
   - cd $BUILD_DIR
 install:
   - cpan-install --toolchain
-  - cpan-install Test::More
   - cpan-install --deps
   - cpan-install --coverage
 before_script:
