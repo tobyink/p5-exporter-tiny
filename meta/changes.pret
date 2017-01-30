@@ -162,3 +162,10 @@
 		item "Support { -as => CODE } to programatically rename functions."^^Change;
 	].
 
+`Exporter-Tiny 0.043_02 cpan:TOBYINK`
+	issued  2017-01-30;
+	changeset [
+		dcs:versus `Exporter-Tiny 0.043_01 cpan:TOBYINK`;
+		item "Release using newer versions of toolchain stuff."^^Packaging;
+	].
+
