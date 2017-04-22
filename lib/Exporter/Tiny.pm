@@ -384,7 +384,7 @@ Exporter::Tiny - an exporter with the features of Sub::Exporter but only core de
 Exporter::Tiny supports many of Sub::Exporter's external-facing features
 including renaming imported functions with the C<< -as >>, C<< -prefix >> and
 C<< -suffix >> options; explicit destinations with the C<< into >> option;
-and alternative installers with the C<< installler >> option. But it's written
+and alternative installers with the C<< installer >> option. But it's written
 in only about 40% as many lines of code and with zero non-core dependencies.
 
 Its internal-facing interface is closer to Exporter.pm, with configuration
