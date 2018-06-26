@@ -21,7 +21,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More test => 7;
+use Test::More tests => 7;
 
 BEGIN {
 	package My::Exporter;
