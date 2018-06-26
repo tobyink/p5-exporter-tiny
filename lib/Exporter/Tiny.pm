@@ -230,6 +230,7 @@ sub _exporter_expand_sub
 		my $sub = $class->can($name);
 		return $sigilname => $sub if $sub;
 		
+		# Could do this more cleverly, but this works.
 		if ($sigil ne '&') {
 			my $evalled = eval "\\${sigil}${class}::${name}";
 			return $sigilname => $evalled if $evalled;
