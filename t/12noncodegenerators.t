@@ -4,7 +4,7 @@
 
 =head1 PURPOSE
 
-Test Exporter::Tiny exporting non-code symbols.
+Test Exporter::Tiny exporting non-code symbols from generators.
 
 =head1 AUTHOR
 
@@ -21,7 +21,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 7;
 
 BEGIN {
 	package My::Exporter;
@@ -54,5 +54,3 @@ is_deeply(\%My::Exporter::_Baz, { quux => 'xyzzy', quuux => 'blarg' }, 'importin
 my $into = {};
 My::Exporter->import({ into => $into }, qw( $Foo @Bar %Baz ));
 is_deeply($into, { '$Foo' => \21, '@Bar' => [1..4], '%Baz' => {qw/quux xyzzy quuux blarg/} }, 'importing non-code symbols into hashrefs');
-
-done_testing;
