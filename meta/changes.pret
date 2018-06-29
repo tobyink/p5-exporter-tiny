@@ -190,3 +190,11 @@
 		item "Support for exporting non-code symbols such as $Foo, @Bar, and %Baz."^^Addition;
 		item "Support for generating non-code symbols."^^Addition;
 	].
+
+
+`Exporter-Tiny 1.001_001 cpan:TOBYINK`
+	issued  2018-06-29;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.001_000 cpan:TOBYINK`;
+		item "Improved test coverage, up from 88.78% on coveralls.io to 96.74%."^^Tests;
+	].
