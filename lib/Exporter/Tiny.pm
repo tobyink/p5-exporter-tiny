@@ -296,6 +296,7 @@ sub _exporter_install_sub
 	return ($into->{$sigilname} = $sym) if ref($into) eq q(HASH);
 	
 	no strict qw(refs);
+	our %TRACKED;
 	
 	if (ref($sym) eq 'CODE' and exists &{"$into\::$name"} and \&{"$into\::$name"} != $sym)
 	{
@@ -311,6 +312,10 @@ sub _exporter_install_sub
 			die      => \&_croak,
 		}->{$level} || sub {};
 		
+		# Don't complain about double-installing the same sub. This isn't ideal
+		# because the same named sub might be generated in two different ways.
+		$action = sub {} if $TRACKED{$class}{$into}{$sigilname};
+		
 		$action->(
 			$action == \&_croak
 				? "Refusing to overwrite existing sub '%s::%s' with sub '%s' exported by %s"
@@ -322,7 +327,6 @@ sub _exporter_install_sub
 		);
 	}
 	
-	our %TRACKED;
 	$TRACKED{$class}{$into}{$sigilname} = $sym;
 	
 	no warnings qw(prototype);
