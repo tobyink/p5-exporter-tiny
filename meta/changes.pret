@@ -206,3 +206,10 @@
 		item "Repackage as 1.002000."^^Packaging;
 	].
 
+`Exporter-Tiny 1.002001 cpan:TOBYINK`
+	issued  2018-07-17;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.002000 cpan:TOBYINK`;
+		item "Fix dates in changelog."^^Packaging;
+	].
+
