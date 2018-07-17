@@ -198,3 +198,11 @@
 		dcs:versus `Exporter-Tiny 1.001_000 cpan:TOBYINK`;
 		item "Improved test coverage, up from 88.78% on coveralls.io to 96.74%."^^Tests;
 	].
+
+`Exporter-Tiny 1.002000 cpan:TOBYINK`
+	issued  2017-05-22;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.001_001 cpan:TOBYINK`;
+		item "Repackage as 1.002000."^^Packaging;
+	].
+
