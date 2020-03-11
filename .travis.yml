@@ -1,47 +1,58 @@
 language: perl
-perl:
-  - "5.6.2"
-  - "5.8.1"
-  - "5.8.9-thr"
-  - "5.8.9"
-  - "5.10"
-  - "5.12"
-  - "5.14"
-  - "5.16"
-  - "5.18"
-  - "5.20"
-  - "5.22"
-  - "5.24"
-  - "5.24.2-thr"
-  - "5.26"
 matrix:
-  allow_failures:
-    # Test::More issues?
-    - perl: "5.6.2"
   include:
+    - perl: "5.30"
+    - perl: "5.30-thr"
+    - perl: "5.28"
+    - perl: "5.26"
     - perl: "5.24"
-      env: COVERAGE=1
+    - perl: "5.22"
+    - perl: "5.20"
+      dist: trusty
+    - perl: "5.18"
+      dist: trusty
+    - perl: "5.16"
+      dist: trusty
+    - perl: "5.14"
+      dist: trusty
+    - perl: "5.12"
+      dist: trusty
+    - perl: "5.10"
+      dist: trusty
+    - perl: "5.8.9"
+      dist: trusty
+    - perl: "5.8.9-thr"
+      dist: trusty
+    - perl: "5.8.1"
+      dist: trusty
+    - perl: "5.6.2"
+      dist: trusty
+    - perl: "5.6.1"
+      dist: trusty
+      script: prove -r -Ilib -Iinc -Iinc/archaic $(test-dirs)      
+    - perl: "dev"
+    - perl: "dev-thr"
+    - perl: "blead"
+    - perl: "cperl-5.28.0"
+  allow_failures:
+    - perl: "blead"
+    - perl: "cperl-5.28.0"
 before_install:
   - export DIST_INKT_PROFILE="Dist::Inkt::Profile::TOBYINK"
-  - git clone git://github.com/tobyink/perl-travis-helper ~/perl-travis-helper
-  - source ~/perl-travis-helper/init
-  - build-perl
-  - perl -V
-  - build-dist
-  - cd $BUILD_DIR
+  - eval $(curl https://travis-perl.github.io/init) --auto
 install:
   - cpan-install --toolchain
   - cpan-install --deps
   - cpan-install --coverage
+  - '[ -n "$MOOSE_RELEASE" ] && cpan-install "$MOOSE_RELEASE" || echo "MOOSE_RELEASE is not set"'
+  - '[ -n "$EC_RELEASE" ]    && cpan-install "$EC_RELEASE"    || echo "EC_RELEASE is not set"'
+  - '[ -n "$MOO_RELEASE" ]   && cpan-install "$MOO_RELEASE"   || echo "MOO_RELEASE is not set"'
 before_script:
   - coverage-setup
 script:
-  - prove -l -v "t"
+  - prove -r -Ilib -Iinc $(test-dirs)
 after_success:
   - coverage-report
-notifications:
-  irc:
-    channels:
-      - "irc.perl.org#moops"
-    on_success: change
-
+cache:
+  directories:
+    - "~/perl5"
