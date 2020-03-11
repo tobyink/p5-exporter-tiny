@@ -34,9 +34,11 @@ matrix:
     - perl: "dev-thr"
     - perl: "blead"
     - perl: "cperl-5.28.0"
+    - perl: "cperl-5.30.0"
   allow_failures:
     - perl: "blead"
     - perl: "cperl-5.28.0"
+    - perl: "cperl-5.30.0"
 before_install:
   - export DIST_INKT_PROFILE="Dist::Inkt::Profile::TOBYINK"
   - eval $(curl https://travis-perl.github.io/init) --auto
