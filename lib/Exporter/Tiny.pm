@@ -21,7 +21,7 @@ my $_process_optlist = sub
 		my $opt = shift @{$opts};
 		my ($name, $value) = @$opt;
 		
-		($name =~ m{\A\!(/.+/[msixpodual]+)\z}) ?
+		($name =~ m{\A\!(/.+/[msixpodual]*)\z}) ?
 			do {
 				my @not = $class->_exporter_expand_regexp($1, $value, $global_opts);
 				++$not_want->{$_->[0]} for @not;
@@ -30,7 +30,7 @@ my $_process_optlist = sub
 			(++$not_want->{$1}) :
 		($name =~ m{\A[:-](.+)\z}) ?
 			push(@$opts, $class->_exporter_expand_tag($1, $value, $global_opts)) :
-		($name =~ m{\A/.+/[msixpodual]+\z}) ?
+		($name =~ m{\A/.+/[msixpodual]*\z}) ?
 			push(@$opts, $class->_exporter_expand_regexp($name, $value, $global_opts)) :
 		# else ?
 			push(@$want, $opt);
