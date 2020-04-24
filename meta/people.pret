@@ -7,3 +7,11 @@ cpan:TOBYINK
 	:page  <https://metacpan.org/author/TOBYINK>;
 	:mbox  <mailto:tobyink@cpan.org>.
 
+cpan:BOKUTIN
+	:name "Tomohiro Hosaka";
+	:page <https://github.com/bokutin>.
+
+<urn:uuid:b3e41a0e-7432-48e3-900d-a5cc78c4337e>
+	a :Person;
+	:nick "zhumengu";
+	:page <https://github.com/zhumengu>.

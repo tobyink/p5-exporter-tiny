@@ -213,3 +213,21 @@
 		item "Fix dates in changelog."^^Packaging;
 	].
 
+`Exporter-Tiny 1.002002 cpan:TOBYINK`
+	issued  2020-04-24;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.002001 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Bug in handling regexps in import lists; Exporter::Tiny allowed regexps like /foo/i but not /foo/. Having trailing flags is now optional!";
+			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/6>;
+			dcs:thanks cpan:BOKUTIN;
+		];
+		item [
+			a dcs:Bugfix, dcs:Tests;
+			label "Tests would fail if `PERL5OPT=-Mfeature=:5.18` environment variable was set. This is because bareword `-default` was being interpreted as the Perl `default` keyword.";
+			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/5>;
+			dcs:thanks <urn:uuid:b3e41a0e-7432-48e3-900d-a5cc78c4337e>;
+		];
+	].
+
