@@ -1,6 +1,7 @@
 language: perl
 matrix:
   include:
+    - perl: "5.32"
     - perl: "5.30"
     - perl: "5.30-thr"
     - perl: "5.28"
@@ -33,8 +34,10 @@ matrix:
     - perl: "dev"
     - perl: "dev-thr"
     - perl: "blead"
+    - perl: "blead-thr"
   allow_failures:
     - perl: "blead"
+    - perl: "blead-thr"
 before_install:
   - export DIST_INKT_PROFILE="Dist::Inkt::Profile::TOBYINK"
   - eval $(curl https://travis-perl.github.io/init) --auto
@@ -42,9 +45,6 @@ install:
   - cpan-install --toolchain
   - cpan-install --deps
   - cpan-install --coverage
-  - '[ -n "$MOOSE_RELEASE" ] && cpan-install "$MOOSE_RELEASE" || echo "MOOSE_RELEASE is not set"'
-  - '[ -n "$EC_RELEASE" ]    && cpan-install "$EC_RELEASE"    || echo "EC_RELEASE is not set"'
-  - '[ -n "$MOO_RELEASE" ]   && cpan-install "$MOO_RELEASE"   || echo "MOO_RELEASE is not set"'
 before_script:
   - coverage-setup
 script:
