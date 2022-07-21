@@ -241,3 +241,12 @@
 		];
 	].
 
+`Exporter-Tiny 1.003_001 cpan:TOBYINK`
+	issued  2022-07-21;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.003_000 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Correctly check Perl version is at least 5.37.2+ before supporting -lexical option.";
+		];
+	].
