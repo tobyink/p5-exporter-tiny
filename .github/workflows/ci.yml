@@ -23,6 +23,11 @@ jobs:
       - name: Install local::lib
         run: |
           cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+      - name: Install Dist::Inkt dependencies
+        shell: bash
+        run: |
+          eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+          cpanm -n Try::Tiny LWP::UserAgent Data::Dump
       - name: Install Dist::Inkt
         shell: bash
         run: |
@@ -70,7 +75,7 @@ jobs:
   test:
     name: Perl ${{ matrix.perl }} ${{ matrix.os }} ${{ matrix.joblabel }}
     needs: dist
-    runs-on: ${{ ( ( startsWith(matrix.os, 'ubuntu:') && 'ubuntu-latest' ) || ( startsWith(matrix.os, 'macos:') && 'macos-latest' ) || startsWith(matrix.os, 'windows:') && 'windows-latest' ) || matrix.os }}
+    runs-on: ${{ ( ( matrix.os == 'strawberry') && 'windows-latest' ) || matrix.os }}
     env:
       GHA_TESTING_MODE:     ${{ matrix.extended_testing }}
       GHA_TESTING_COVER:    ${{ matrix.coverage }}
@@ -81,18 +86,18 @@ jobs:
         os:                 [ 'ubuntu-latest' ]
         perl:               [ '5.8.5', '5.8.6', '5.8.7', '5.8.8', '5.8.9', '5.10', '5.10.1', '5.12', '5.14', '5.16', '5.18', '5.20', '5.22', '5.24', '5.26', '5.28', '5.30', '5.32' ]
         coverage:           [ false ]
+        threaded:           [ null ]
         extra_dependencies: [ true ]
         extended_testing:   [ 'extended' ]
         exclude:
-          - { os: 'windows-latest', perl: '5.8' }
-          - { os: 'windows-latest', perl: '5.10' }
-          - { os: 'windows-latest', perl: '5.12' }
+          - { os: 'windows-latest', perl: '5.4' }
         include:
           - os: 'ubuntu-latest'
-            perl: '5.30'
+            perl: '5.36'
+            threaded: false
             coverage: true
             extra_dependencies: true
-            extended_testing: #COVERAGE_EXTENDED_TESTIN:G#
+            extended_testing: 'extended'
             joblabel: '(Coverage)'
     steps:
       - name: Get dist artifact
@@ -103,14 +108,11 @@ jobs:
         uses: shogo82148/actions-setup-perl@v1
         with:
           perl-version: ${{ matrix.perl }}
-          multi-thread: ${{ ( ( startsWith(matrix.os, 'windows') || endsWith(matrix.os, ':thr') ) && true ) || false }}
-          distribution: ${{ ( endsWith(matrix.os, ':strawberry') && 'strawberry' ) || 'default' }}
+          multi-thread: ${{ matrix.threaded }}
+          distribution: ${{ ( ( matrix.os == 'strawberry') && 'strawberry' ) || 'default' }}
       - name: Perl version
         run: |
           perl -v
-      - name: Configure
-        working-directory: ./build/
-        run: perl Makefile.PL
       - name: Install dependencies
         run: |
           cpanm -n App::GhaProve
@@ -124,9 +126,12 @@ jobs:
           cpanm -n Devel::Cover
           cpanm -n Devel::Cover::Report::Coveralls
           cpanm -n Devel::Cover::Report::Codecov
+      - name: Configure
+        working-directory: ./build/
+        run: perl Makefile.PL
       - name: Make
         working-directory: ./build/
-        run: make
+        run: perl -MConfig -e'exec $Config{make}'
       - name: Clean coverage data
         if: matrix.coverage
         working-directory: ./build/
@@ -140,9 +145,9 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
         run: cover -select_re '^blib/lib/' -report coveralls
-      - name: Codecov.io report
-        if: success() && matrix.coverage
-        working-directory: ./build/
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: cover -select_re '^blib/lib/' -report codecov
+      #- name: Codecov.io report
+      #  if: success() && matrix.coverage
+      #  working-directory: ./build/
+      #  env:
+      #    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      #  run: cover -select_re '^blib/lib/' -report codecov
