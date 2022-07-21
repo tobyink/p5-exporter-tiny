@@ -231,3 +231,13 @@
 		];
 	].
 
+`Exporter-Tiny 1.003_000 cpan:TOBYINK`
+	issued  2022-07-21;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.002002 cpan:TOBYINK`;
+		item [
+			a dcs:Update;
+			label "Provide a `-lexical` export option on Perl 5.37.2+.";
+		];
+	].
+
