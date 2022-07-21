@@ -486,7 +486,7 @@ L<Exporter::Tiny::Manual::Importing>
 =head1 BUGS
 
 Please report any bugs to
-L<http://rt.cpan.org/Dist/Display.html?Queue=Exporter-Tiny>.
+L<https://github.com/tobyink/p5-exporter-tiny/issues>.
 
 =head1 SUPPORT
 
