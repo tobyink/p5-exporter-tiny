@@ -145,9 +145,9 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
         run: cover -select_re '^blib/lib/' -report coveralls
-      #- name: Codecov.io report
-      #  if: success() && matrix.coverage
-      #  working-directory: ./build/
-      #  env:
-      #    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      #  run: cover -select_re '^blib/lib/' -report codecov
+      - name: Codecov.io report
+        if: success() && matrix.coverage
+        working-directory: ./build/
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: cover -select_re '^blib/lib/' -report codecov
