@@ -261,7 +261,17 @@ sub _exporter_install_sub
 	
 	my $into      = $globals->{into};
 	my $installer = $globals->{installer} || $globals->{exporter};
-	
+
+	if ( $into eq '-lexical' or $globals->{lexical} ) {
+		$] ge '5.036002'
+			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
+		$installer ||= sub {
+			my ( $sigilname, $sym ) = @{ $_[1] };
+			no warnings ( $] ge '5.036002' ? 'experimental::builtin' : () );
+			builtin::export_lexically( $sigilname, $sym );
+		};
+	}
+
 	$name =
 		ref    $globals->{as} ? $globals->{as}->($name) :
 		ref    $value->{-as}  ? $value->{-as}->($name) :
@@ -495,7 +505,7 @@ Toby Inkster E<lt>tobyink@cpan.orgE<gt>.
 
 =head1 COPYRIGHT AND LICENCE
 
-This software is copyright (c) 2013-2014, 2017 by Toby Inkster.
+This software is copyright (c) 2013-2014, 2017, 2022 by Toby Inkster.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
