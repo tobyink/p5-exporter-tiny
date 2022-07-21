@@ -263,11 +263,11 @@ sub _exporter_install_sub
 	my $installer = $globals->{installer} || $globals->{exporter};
 
 	if ( $into eq '-lexical' or $globals->{lexical} ) {
-		$] ge '5.036002'
+		$] ge '5.037002'
 			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
 		$installer ||= sub {
 			my ( $sigilname, $sym ) = @{ $_[1] };
-			no warnings ( $] ge '5.036002' ? 'experimental::builtin' : () );
+			no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
 			builtin::export_lexically( $sigilname, $sym );
 		};
 	}
