@@ -250,3 +250,15 @@
 			label "Correctly check Perl version is at least 5.37.2+ before supporting -lexical option.";
 		];
 	].
+
+`Exporter-Tiny 1.003_002 cpan:TOBYINK`
+	issued  2022-08-18;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.003_001 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Quote $1 when passing it as a parameter to a function";
+			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/7>;
+			dcs:thanks <urn:uuid:b9949163-3436-4e80-93f4-8be211e644c4>;
+		];
+	].

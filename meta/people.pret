@@ -15,3 +15,9 @@ cpan:BOKUTIN
 	a :Person;
 	:nick "zhumengu";
 	:page <https://github.com/zhumengu>.
+
+<urn:uuid:b9949163-3436-4e80-93f4-8be211e644c4>
+	a :Person;
+	:nick "KES777";
+	:name "Eugen Konkov";
+	:page <https://github.com/KES777>.
