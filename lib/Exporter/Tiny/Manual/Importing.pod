@@ -152,6 +152,9 @@ from L<builtin> to give you lexical versions of exports.
    
    frobnicate(...);  # not ok
 
+This functionality should be considered B<EXPERIMENTAL> until
+C<export_lexically> is included in a stable release of Perl.
+
 =head2 Lexical subs on Perl older than 5.37.2
 
 There is this L<Sub::Exporter::Lexical> thing that was designed as a
