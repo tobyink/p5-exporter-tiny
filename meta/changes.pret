@@ -262,3 +262,17 @@
 			dcs:thanks <urn:uuid:b9949163-3436-4e80-93f4-8be211e644c4>;
 		];
 	].
+
+`Exporter-Tiny 1.004000 cpan:TOBYINK`
+	issued  2022-08-26;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.003_002 cpan:TOBYINK`;
+		item [
+			a dcs:Packaging;
+			label "No functional changes; repackage as stable.";
+		];
+		item [
+			a dcs:Documentation;
+			label "Document that the `-lexical` export option is experimental.";
+		];
+	].
