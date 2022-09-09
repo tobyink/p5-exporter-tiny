@@ -276,3 +276,13 @@
 			label "Document that the `-lexical` export option is experimental.";
 		];
 	].
+
+`Exporter-Tiny 1.004001 cpan:TOBYINK`
+	issued  2022-09-09;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.004000 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Fix handling of non-hashref references in import list.";
+		];
+	].
