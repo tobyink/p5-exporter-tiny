@@ -286,3 +286,13 @@
 			label "Fix handling of non-hashref references in import list.";
 		];
 	].
+
+`Exporter-Tiny 1.004002 cpan:TOBYINK`
+	issued  2022-09-16;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.004001 cpan:TOBYINK`;
+		item [
+			a dcs:Tests;
+			label "Fix for t/15nonhashvalue.t on old versions of Test::More which don't support `done_testing`.";
+		];
+	].
