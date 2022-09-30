@@ -25,7 +25,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 5;
 
 BEGIN {
 	package Local::Exporter;
@@ -79,5 +79,3 @@ is_deeply(
 	[],
 	'-want !-want',
 ) or &$dump;
-
-done_testing;

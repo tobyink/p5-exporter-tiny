@@ -25,7 +25,7 @@ the same terms as the Perl 5 programming language system itself.
 
 use strict;
 use warnings;
-use Test::More;
+use Test::More tests => 3;
 
 BEGIN {
 	package Local::Exporter;
@@ -41,5 +41,3 @@ use Local::Exporter -all;
 is_deeply( [ FLAVORS() ], [ qw(   CHOCOLATE   VANILLA ) ] );
 is_deeply( \@FLAVORS,     [ qw(   chocolate   vanilla ) ] );
 is_deeply( \%FLAVORS,     { qw( 1 chocolate 2 vanilla ) } );
-
-done_testing;
