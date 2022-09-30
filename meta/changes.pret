@@ -296,3 +296,21 @@
 			label "Fix for t/15nonhashvalue.t on old versions of Test::More which don't support `done_testing`.";
 		];
 	].
+
+`Exporter-Tiny 1.004003 cpan:TOBYINK`
+	issued  2022-09-30;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.004002 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Using ! with a tag now works; it was previously documented as working but not implemented.";
+			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/8>;
+			dcs:thanks <cpan:DJERIUS>;
+		];
+		item [
+			a dcs:Bugfix;
+			label "If exporting non-CODE items which happen to have the same name as exported CODE items, their export was being quietly blocked. These exports should now work.";
+			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/9>;
+			dcs:thanks <cpan:DJERIUS>;
+		];
+	].

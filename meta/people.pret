@@ -21,3 +21,6 @@ cpan:BOKUTIN
 	:nick "KES777";
 	:name "Eugen Konkov";
 	:page <https://github.com/KES777>.
+
+cpan:DJERIUS
+	:name "Diab Jerius".
