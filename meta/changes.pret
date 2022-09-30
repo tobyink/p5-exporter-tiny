@@ -305,12 +305,12 @@
 			a dcs:Bugfix;
 			label "Using ! with a tag now works; it was previously documented as working but not implemented.";
 			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/8>;
-			dcs:thanks <cpan:DJERIUS>;
+			dcs:thanks cpan:DJERIUS;
 		];
 		item [
 			a dcs:Bugfix;
 			label "If exporting non-CODE items which happen to have the same name as exported CODE items, their export was being quietly blocked. These exports should now work.";
 			rdfs:seeAlso <https://github.com/tobyink/p5-exporter-tiny/issues/9>;
-			dcs:thanks <cpan:DJERIUS>;
+			dcs:thanks cpan:DJERIUS;
 		];
 	].
