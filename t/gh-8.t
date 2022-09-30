@@ -38,7 +38,8 @@ BEGIN {
 
 my %stuff;
 my $dump  = sub {
-	diag explain \%stuff;
+	use Data::Dumper;
+	diag Dumper( \%stuff );
 };
 
 %stuff = ();
