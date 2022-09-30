@@ -30,7 +30,8 @@ use Test::More tests => 5;
 BEGIN {
 	package Local::Exporter;
 	use Exporter::Shiny;
-	use constant { map { $_ => 1 } 'chocolate', 'vanilla' };
+	sub chocolate { 1 }
+	sub vanilla   { 2 }
 	our %EXPORT_TAGS = ( want => [ qw( chocolate vanilla ) ] );
 	our @EXPORT_OK   = map { @$_ } values %EXPORT_TAGS;
 };
