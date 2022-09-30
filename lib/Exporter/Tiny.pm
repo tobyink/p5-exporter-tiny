@@ -26,6 +26,11 @@ my $_process_optlist = sub
 				my @not = $class->_exporter_expand_regexp("$1", $value, $global_opts);
 				++$not_want->{$_->[0]} for @not;
 			} :
+		($name =~ m{\A\![:-](.+)\z}) ?
+			do {
+				my @not = $class->_exporter_expand_tag("$1", $value, $global_opts);
+				++$not_want->{$_->[0]} for @not;
+			} :
 		($name =~ m{\A\!(.+)\z}) ?
 			(++$not_want->{$1}) :
 		($name =~ m{\A[:-](.+)\z}) ?
