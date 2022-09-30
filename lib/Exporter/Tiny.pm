@@ -227,11 +227,12 @@ sub _exporter_expand_sub
 		my $generator = $class->can("$generatorprefix$name");
 		return $sigilname => $class->$generator($sigilname, $value, $globals) if $generator;
 		
-		my $sub = $class->can($name);
-		return $sigilname => $sub if $sub;
-		
-		# Could do this more cleverly, but this works.
-		if ($sigil ne '&') {
+		if ($sigil eq '&') {
+			my $sub = $class->can($name);
+			return $sigilname => $sub if $sub;
+		}
+		else {
+			# Could do this more cleverly, but this works.
 			my $evalled = eval "\\${sigil}${class}::${name}";
 			return $sigilname => $evalled if $evalled;
 		}
