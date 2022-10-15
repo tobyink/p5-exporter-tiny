@@ -315,7 +315,9 @@ sub _exporter_install_sub
 	no strict qw(refs);
 	our %TRACKED;
 	
-	if (ref($sym) eq 'CODE' and exists &{"$into\::$name"} and \&{"$into\::$name"} != $sym)
+	if ( ref($sym) eq 'CODE'
+	and ref($into) ? exists($into->{$name}) : exists(&{"$into\::$name"})
+	and $sym != ( ref($into) ? $into->{$name} : \&{"$into\::$name"} ) )
 	{
 		my ($level) = grep defined, $value_hash->{-replace}, $globals->{replace}, q(0);
 		my $action = {
@@ -335,10 +337,9 @@ sub _exporter_install_sub
 		
 		$action->(
 			$action == \&_croak
-				? "Refusing to overwrite existing sub '%s::%s' with sub '%s' exported by %s"
-				: "Overwriting existing sub '%s::%s' with sub '%s' exported by %s",
-			$into,
-			$name,
+				? "Refusing to overwrite existing sub '%s' with sub '%s' exported by %s"
+				: "Overwriting existing sub '%s' with sub '%s' exported by %s",
+			ref($into) ? $name : "$into\::$name",
 			$_[0],
 			$class,
 		);
