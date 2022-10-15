@@ -54,6 +54,16 @@ sub import
 	my $opts = mkopt(\@args);
 	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
 	
+	if ( $global_opts->{into} eq '-lexical' or $global_opts->{lexical} ) {
+		$] ge '5.037002'
+			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
+		$global_opts->{installer} ||= sub {
+			my ( $sigilname, $sym ) = @{ $_[1] };
+			no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
+			builtin::export_lexically( $sigilname, $sym );
+		};
+	}
+	
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
 	$class->_exporter_validate_opts($global_opts);
 	
@@ -268,17 +278,7 @@ sub _exporter_install_sub
 	
 	my $into      = $globals->{into};
 	my $installer = $globals->{installer} || $globals->{exporter};
-
-	if ( $into eq '-lexical' or $globals->{lexical} ) {
-		$] ge '5.037002'
-			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
-		$installer ||= sub {
-			my ( $sigilname, $sym ) = @{ $_[1] };
-			no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
-			builtin::export_lexically( $sigilname, $sym );
-		};
-	}
-
+	
 	$name =
 		ref    $globals->{as}      ? $globals->{as}->($name) :
 		ref    $value_hash->{-as}  ? $value_hash->{-as}->($name) :
