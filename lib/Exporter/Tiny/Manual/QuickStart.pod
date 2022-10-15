@@ -165,7 +165,7 @@ The example in the synopsis could have been written as:
 What Exporter::Shiny does is mostly just to set C<< @EXPORT_OK >> for
 you and set up inheritance from the base class (Exporter::Tiny).
 
-Exporter::Shiny also sets C<< $INC{'MyUtils.pm} >> for you, which in
+Exporter::Shiny also sets C<< $INC{'MyUtils.pm'} >> for you, which in
 usually makes little difference, but is useful in some edge cases.
 
 =head1 SEE ALSO
