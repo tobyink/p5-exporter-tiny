@@ -314,3 +314,13 @@
 			dcs:thanks cpan:DJERIUS;
 		];
 	].
+
+`Exporter-Tiny 1.004004 cpan:TOBYINK`
+	issued  2022-10-15;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.004003 cpan:TOBYINK`;
+		item [
+			a dcs:Documentation;
+			label "Minor corrections to QuickStart page in the manual.";
+		];
+	].
