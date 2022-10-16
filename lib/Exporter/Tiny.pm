@@ -46,7 +46,14 @@ sub import
 {
 	my $class = shift;
 	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
-	$global_opts->{into} = caller unless exists $global_opts->{into};
+	
+	if ( defined $global_opts->{into} and $global_opts->{into} eq '-lexical' ) {
+		$global_opts->{lexical} = 1;
+		delete $global_opts->{into};
+	}
+	if ( not defined $global_opts->{into} ) {
+		$global_opts->{into} = caller;
+	}
 	
 	my @want;
 	my %not_want; $global_opts->{not} = \%not_want;
@@ -54,7 +61,7 @@ sub import
 	my $opts = mkopt(\@args);
 	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
 	
-	if ( $global_opts->{into} eq '-lexical' or $global_opts->{lexical} ) {
+	if ( $global_opts->{lexical} ) {
 		$] ge '5.037002'
 			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
 		$global_opts->{installer} ||= sub {
@@ -81,8 +88,15 @@ sub unimport
 {
 	my $class = shift;
 	my $global_opts = +{ @_ && ref($_[0]) eq q(HASH) ? %{+shift} : () };
-	$global_opts->{into} = caller unless exists $global_opts->{into};
 	$global_opts->{is_unimport} = 1;
+	
+	if ( defined $global_opts->{into} and $global_opts->{into} eq '-lexical' ) {
+		$global_opts->{lexical} = 1;
+		delete $global_opts->{into};
+	}
+	if ( not defined $global_opts->{into} ) {
+		$global_opts->{into} = caller;
+	}
 	
 	my @want;
 	my %not_want; $global_opts->{not} = \%not_want;
