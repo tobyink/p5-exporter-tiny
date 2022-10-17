@@ -1,7 +1,7 @@
 # Exporter-Tiny
 
 [![MetaCPAN](https://img.shields.io/cpan/v/Exporter-Tiny.svg)](https://metacpan.org/release/Exporter-Tiny)
-![Licence](https://img.shields.io/cpan/l/Exporter-Tiny)
+[![Licence](https://img.shields.io/cpan/l/Exporter-Tiny)](https://metacpan.org/dist/Exporter-Tiny/source/LICENSE)
 [![Issues](https://img.shields.io/github/issues/tobyink/p5-exporter-tiny)](https://github.com/tobyink/p5-exporter-tiny/issues)
 [![CI](https://github.com/tobyink/p5-exporter-tiny/workflows/CI/badge.svg)](https://github.com/tobyink/p5-exporter-tiny/actions)
 [![Coveralls](https://coveralls.io/repos/tobyink/p5-exporter-tiny/badge.svg?branch=master&amp;service=github)](https://coveralls.io/github/tobyink/p5-exporter-tiny)
