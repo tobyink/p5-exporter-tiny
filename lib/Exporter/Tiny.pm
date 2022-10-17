@@ -8,6 +8,15 @@ our $AUTHORITY = 'cpan:TOBYINK';
 our $VERSION   = '1.004004';
 our @EXPORT_OK = qw< mkopt mkopt_hash _croak _carp >;
 
+BEGIN {
+	*_HAS_NATIVE_LEXICAL_SUB = ( $] ge '5.037002' )
+		? sub () { !!1 }
+		: sub () { !!0 };
+	*_HAS_MODULE_LEXICAL_SUB = ( $] ge '5.011002' and eval('require Lexical::Sub') )
+		? sub () { !!1 }
+		: sub () { !!0 };
+};
+
 sub _croak ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::croak }
 sub _carp  ($;@) { require Carp; my $fmt = shift; @_ = sprintf($fmt, @_); goto \&Carp::carp }
 
@@ -67,8 +76,7 @@ sub import
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
 	$class->_exporter_validate_opts($global_opts);
 	
-	for my $wanted (@want)
-	{
+	for my $wanted (@want) {
 		next if $not_want{$wanted->[0]};
 		
 		my %symbols = $class->_exporter_expand_sub(@$wanted, $global_opts, $permitted);
@@ -124,13 +132,18 @@ sub unimport
 # Returns a coderef suitable to be used as a sub installer for lexical imports.
 #
 sub _exporter_lexical_installer {
-	$] ge '5.037002'
-		or _croak( 'Lexical export requires Perl 5.37.2 or above' );
-	return sub {
+	_HAS_NATIVE_LEXICAL_SUB and return sub {
 		my ( $sigilname, $sym ) = @{ $_[1] };
 		no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
 		builtin::export_lexically( $sigilname, $sym );
 	};
+	_HAS_MODULE_LEXICAL_SUB and return sub {
+		my ( $sigilname, $sym ) = @{ $_[1] };
+		( $sigilname =~ /^\w/ )
+			? 'Lexical::Sub'->import( $sigilname, $sym )
+			: 'Lexical::Var'->import( $sigilname, $sym );
+	};
+	_croak( 'Lexical export requires Perl 5.37.2+ for native support, or Perl 5.11.2+ with the Lexical::Sub module' );
 }
 
 # Called once per import/unimport, passed the "global" import options.
@@ -320,14 +333,14 @@ sub _exporter_install_sub
 		$name = "$prefix$name$suffix";
 	}
 	
-	my $sigilname = $sigil eq '&' ? $name : "$sigil$name";
+	my $sigilname = $sigil eq '&' ? $name : ( $sigil . $name );
 	
 #	if ({qw/$ SCALAR @ ARRAY % HASH & CODE/}->{$sigil} ne ref($sym)) {
 #		warn $sym;
 #		warn $sigilname;
 #		_croak("Reference type %s does not match sigil %s", ref($sym), $sigil);
 #	}
-		
+	
 	return ($$name = $sym)              if ref($name) eq q(SCALAR);
 	return ($into->{$sigilname} = $sym) if ref($into) eq q(HASH);
 	
