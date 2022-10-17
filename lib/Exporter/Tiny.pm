@@ -61,15 +61,8 @@ sub import
 	my $opts = mkopt(\@args);
 	$class->$_process_optlist($global_opts, $opts, \@want, \%not_want);
 	
-	if ( $global_opts->{lexical} ) {
-		$] ge '5.037002'
-			or _croak( 'Lexical export requires Perl 5.37.2 or above' );
-		$global_opts->{installer} ||= sub {
-			my ( $sigilname, $sym ) = @{ $_[1] };
-			no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
-			builtin::export_lexically( $sigilname, $sym );
-		};
-	}
+	$global_opts->{installer} ||= $class->_exporter_lexical_installer( $global_opts )
+		if $global_opts->{lexical};
 	
 	my $permitted = $class->_exporter_permitted_regexp($global_opts);
 	$class->_exporter_validate_opts($global_opts);
@@ -126,6 +119,18 @@ sub unimport
 		$class->_exporter_uninstall_sub($_, $wanted->[1], $global_opts)
 			for keys %symbols;
 	}
+}
+
+# Returns a coderef suitable to be used as a sub installer for lexical imports.
+#
+sub _exporter_lexical_installer {
+	$] ge '5.037002'
+		or _croak( 'Lexical export requires Perl 5.37.2 or above' );
+	return sub {
+		my ( $sigilname, $sym ) = @{ $_[1] };
+		no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
+		builtin::export_lexically( $sigilname, $sym );
+	};
 }
 
 # Called once per import/unimport, passed the "global" import options.
