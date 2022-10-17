@@ -324,3 +324,17 @@
 			label "Minor corrections to QuickStart page in the manual.";
 		];
 	].
+
+`Exporter-Tiny 1.005_000 cpan:TOBYINK`
+	issued  2022-10-17;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.004004 cpan:TOBYINK`;
+		item [
+			a dcs:Change;
+			label "Refactored the Perl 5.37.2+ lexical exporter support.";
+		];
+		item [
+			a dcs:Change;
+			label "Introduced lexical exporter support on Perl 5.11.2+ using the Lexical::Var module.";
+		];
+	].
