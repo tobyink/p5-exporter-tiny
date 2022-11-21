@@ -338,3 +338,13 @@
 			label "Introduced lexical exporter support on Perl 5.11.2+ using the Lexical::Var module.";
 		];
 	].
+
+`Exporter-Tiny 1.006000 cpan:TOBYINK`
+	issued  2022-11-21;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.005_000 cpan:TOBYINK`;
+		item [
+			a dcs:Packaging;
+			label "Stable version number.";
+		];
+	].
