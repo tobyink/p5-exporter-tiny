@@ -348,3 +348,17 @@
 			label "Stable version number.";
 		];
 	].
+
+`Exporter-Tiny 1.006001 cpan:TOBYINK`
+	issued  2023-03-24;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.006000 cpan:TOBYINK`;
+		item [
+			a dcs:Packaging;
+			label "No longer dynamically recommend Alt::Lexical::Var::ButSupportModernPerl.";
+		];
+		item [
+			a dcs:Documentation;
+			label "Don't mention Alt::Lexical::Var::ButSupportModernPerl in manual.";
+		];
+	].
