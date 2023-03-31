@@ -528,11 +528,6 @@ L<Exporter::Tiny::Manual::Importing>
 Please report any bugs to
 L<https://github.com/tobyink/p5-exporter-tiny/issues>.
 
-=head1 SUPPORT
-
-B<< IRC: >> support is available through in the I<< #moops >> channel
-on L<irc.perl.org|http://www.irc.perl.org/channels.html>.
-
 =head1 SEE ALSO
 
 Simplified interface to this module: L<Exporter::Shiny>.
