@@ -244,6 +244,8 @@ The opposite of C<_exporter_install_sub>.
 
 =head1 SEE ALSO
 
+L<https://exportertiny.github.io/>.
+
 L<Exporter::Shiny>,
 L<Exporter::Tiny>.
 

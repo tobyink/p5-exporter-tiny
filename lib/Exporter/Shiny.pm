@@ -90,6 +90,8 @@ L<https://github.com/tobyink/p5-exporter-tiny/issues>.
 
 =head1 SEE ALSO
 
+L<https://exportertiny.github.io/>.
+
 This module is just a wrapper around L<Exporter::Tiny>, so take a look
 at L<Exporter::Tiny::Manual::QuickStart> and
 L<Exporter::Tiny::Manual::Exporting> for further information on what

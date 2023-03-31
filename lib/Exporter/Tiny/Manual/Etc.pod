@@ -112,6 +112,8 @@ Sub::Exporter is installed.)
 
 =head1 SEE ALSO
 
+L<https://exportertiny.github.io/>.
+
 L<Exporter::Shiny>,
 L<Exporter::Tiny>.
 

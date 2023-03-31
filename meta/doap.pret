@@ -7,7 +7,7 @@
 	rdfs:seeAlso          `Type-Tiny`;
 	:programming-language "Perl" ;
 	:shortdesc            "an exporter with the features of Sub::Exporter but only core dependencies";
-	:homepage             <https://metacpan.org/release/Exporter-Tiny>;
+	:homepage             <https://exportertiny.github.io/>;
 	:download-page        <https://metacpan.org/release/Exporter-Tiny>;
 	:bug-database         <https://github.com/tobyink/p5-exporter-tiny/issues>;
 	:repository           [ a :GitRepository; :browse <https://github.com/tobyink/p5-exporter-tiny> ];

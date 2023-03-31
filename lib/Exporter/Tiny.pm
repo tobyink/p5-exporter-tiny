@@ -530,6 +530,8 @@ L<https://github.com/tobyink/p5-exporter-tiny/issues>.
 
 =head1 SEE ALSO
 
+L<https://exportertiny.github.io/>.
+
 Simplified interface to this module: L<Exporter::Shiny>.
 
 Less tiny version, with more features: L<Exporter::Almighty>.
