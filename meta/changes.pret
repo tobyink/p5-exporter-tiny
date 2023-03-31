@@ -362,3 +362,21 @@
 			label "Don't mention Alt::Lexical::Var::ButSupportModernPerl in manual.";
 		];
 	].
+
+`Exporter-Tiny 1.006002 cpan:TOBYINK`
+	issued  2023-03-31;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.006001 cpan:TOBYINK`;
+		item [
+			a dcs:Packaging;
+			label "Set homepage in metadata to https://exportertiny.github.io.";
+		];
+		item [
+			a dcs:Documentation;
+			label "Link to Exporter::Almighty in pod.";
+		];
+		item [
+			a dcs:Documentation;
+			label "Update copyright dates.";
+		];
+	].
