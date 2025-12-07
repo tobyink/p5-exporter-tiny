@@ -394,4 +394,8 @@
 			a dcs:Documentation;
 			label "Restore documentation about exporting to hashes which was accidentally removed.";
 		];
+		item [
+			a dcs:Documentation;
+			label "Update copyright dates.";
+		];
 	].
