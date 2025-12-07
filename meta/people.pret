@@ -24,3 +24,6 @@ cpan:BOKUTIN
 
 cpan:DJERIUS
 	:name "Diab Jerius".
+
+cpan:HAARG
+	:name "Graham Knop".

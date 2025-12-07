@@ -380,3 +380,18 @@
 			label "Update copyright dates.";
 		];
 	].
+
+`Exporter-Tiny 1.006003 cpan:TOBYINK`
+	issued  2025-12-07;
+	changeset [
+		dcs:versus `Exporter-Tiny 1.006003 cpan:TOBYINK`;
+		item [
+			a dcs:Bugfix;
+			label "Support Perl versions >= 10, in theory.";
+			dcs:blame cpan:HAARG;
+		];
+		item [
+			a dcs:Documentation;
+			label "Restore documentation about exporting to hashes which was accidentally removed.";
+		];
+	].
