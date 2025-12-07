@@ -6,10 +6,10 @@
 		$prereq_type = 'requires';
 	}
 
-	if ( $] ge 5.011002 and $] lt 5.037002 ) {
+	if ( "$]" >= 5.011002 and "$]" < 5.037002 ) {
 		$meta->{prereqs}{runtime}{$prereq_type}{'Lexical::Var'} = '0.010';
 	}
 
 	# idk, this should be automatic or summint? put it in explicitly.
 	$meta->{prereqs}{runtime}{requires}{'Test::More'} = '0.47'
-		if $] lt 5.006002;
+		if "$]" < 5.006002;

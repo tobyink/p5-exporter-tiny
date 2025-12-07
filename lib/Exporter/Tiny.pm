@@ -9,10 +9,10 @@ our $VERSION   = '1.006002';
 our @EXPORT_OK = qw< mkopt mkopt_hash _croak _carp >;
 
 BEGIN {
-	*_HAS_NATIVE_LEXICAL_SUB = ( $] ge '5.037002' )
+	*_HAS_NATIVE_LEXICAL_SUB = ( "$]" >= 5.037002 )
 		? sub () { !!1 }
 		: sub () { !!0 };
-	*_HAS_MODULE_LEXICAL_SUB = ( $] ge '5.011002' and eval('require Lexical::Sub') )
+	*_HAS_MODULE_LEXICAL_SUB = ( "$]" >= 5.011002 and eval('require Lexical::Sub') )
 		? sub () { !!1 }
 		: sub () { !!0 };
 };
@@ -134,7 +134,7 @@ sub unimport
 sub _exporter_lexical_installer {
 	_HAS_NATIVE_LEXICAL_SUB and return sub {
 		my ( $sigilname, $sym ) = @{ $_[1] };
-		no warnings ( $] ge '5.037002' ? 'experimental::builtin' : () );
+		no warnings ( "$]" >= 5.037002 ? 'experimental::builtin' : () );
 		builtin::export_lexically( $sigilname, $sym );
 	};
 	_HAS_MODULE_LEXICAL_SUB and return sub {
